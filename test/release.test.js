@@ -30,3 +30,15 @@ test('parseReleaseManifest rejects releases without trusted architecture assets'
     assets: [],
   }), /missing a valid macOS DMG asset/i);
 });
+
+test('parseReleaseManifest rejects non-HTTPS asset URLs', async () => {
+  const { parseReleaseManifest } = await import('../scripts/release.mjs');
+  assert.throws(() => parseReleaseManifest({
+    tag_name: 'v1.2.0',
+    html_url: 'https://github.com/yonatan2021/ports-mcp/releases/tag/v1.2.0',
+    assets: [
+      { name: 'Port-Manager-1.2.0-arm64.dmg', browser_download_url: 'http://example.test/arm64.dmg' },
+      { name: 'Port-Manager-1.2.0-x64.dmg', browser_download_url: 'https://example.test/x64.dmg' },
+    ],
+  }), /missing a valid macOS DMG asset/i);
+});

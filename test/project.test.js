@@ -1,9 +1,10 @@
-import test from 'node:test';
-import assert from 'node:assert/strict';
-import { readFile } from 'node:fs/promises';
+const test = require('node:test');
+const assert = require('node:assert/strict');
+const { readFile } = require('node:fs/promises');
+const { join } = require('node:path');
 
 test('site package is private and standalone', async () => {
-  const pkg = JSON.parse(await readFile(new URL('../package.json', import.meta.url)));
+  const pkg = JSON.parse(await readFile(join(__dirname, '..', 'package.json')));
   assert.equal(pkg.private, true);
   assert.equal(pkg.scripts.build, 'node scripts/build.mjs');
   assert.equal(pkg.scripts.test, 'node --test test/*.test.js');
